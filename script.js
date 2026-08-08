@@ -199,6 +199,125 @@ const interactiveTitle = document.getElementById("interactiveTitle");
 const resourcesGrid = document.getElementById("resourcesGrid");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const resourceSearch = document.getElementById("resourceSearch");
+// Local guide elements
+const localTabs = document.querySelectorAll(".local-tab");
+const localSearch = document.getElementById("localSearch");
+const localCards = document.getElementById("localCards");
+
+const localGuideItems = [
+  // Materials
+  {
+    id: 1,
+    category: "materials",
+    title: "أخشاب محلية (ساج، بن",
+    description: "أنواع الأخشاب المتاحة محلياً واستخداماتها في النجارة والتشطيب.",
+    tags: ["أخشاب", "تشطيب"],
+    link: ""
+  },
+  {
+    id: 2,
+    category: "materials",
+    title: "رخام محلي واستيراد بدائل",
+    description: "مصادر الرخام المحلي وأنواعه وطرق التشطيب المتبعة في السودان.",
+    tags: ["رخام", "مواد"],
+    link: ""
+  },
+  {
+    id: 3,
+    category: "materials",
+    title: "طوب مفرغ ومواصفاته",
+    description: "مزايا الطوب المفرغ وكيفية دمجه في التصميم الداخلي والأثاث القائم على الحوائط.",
+    tags: ["طوب", "بناء"],
+    link: ""
+  },
+  // Markets
+  {
+    id: 11,
+    category: "markets",
+    title: "سوق السجانة",
+    description: "مركز لتوريد الخامات والمواد التقليدية في الخرطوم.",
+    tags: ["أسواق", "خرطوم"],
+    link: ""
+  },
+  {
+    id: 12,
+    category: "markets",
+    title: "ورش النجارة والكريتال",
+    description: "قائمة بورش النجارة المتخصصة وتصنيع الكريتال في المناطق الحضرية.",
+    tags: ["ورش", "نجارة"],
+    link: ""
+  },
+  // Identity
+  {
+    id: 21,
+    category: "identity",
+    title: "التهوية والحوش التقليدي",
+    description: "نصائح لتهوية المباني ودمج الساحات الداخلية (الحوش) لتحسين المناخ الداخلي.",
+    tags: ["تهوية", "مناخ"],
+    link: ""
+  },
+  {
+    id: 22,
+    category: "identity",
+    title: "ألوان ترابية ومحلية",
+    description: "لوحات ألوان مستلهمة من التراث السوداني والمواد المحلية.",
+    tags: ["ألوان", "تراث"],
+    link: ""
+  },
+  {
+    id: 23,
+    category: "identity",
+    title: "دمج التراث في الأثاث المودرن",
+    description: "أمثلة على استخدام عناصر تراثية مع خطوط أثاث حديثة.",
+    tags: ["تراث", "أثاث"],
+    link: ""
+  }
+];
+
+function renderLocalCards(items) {
+  if (!items.length) {
+    localCards.innerHTML = `
+      <div class="no-local-results">
+        <h4>لا توجد نتائج</h4>
+        <p>لم يتم العثور على مدخلات تطابق البحث. جرب كلمة مفتاحية أخرى أو تغيير التبويب.</p>
+      </div>
+    `;
+    return;
+  }
+
+  localCards.innerHTML = items.map((it) => `
+    <article class="local-card">
+      <h4>${it.title}</h4>
+      <p>${it.description}</p>
+      ${it.link ? `<a href="${it.link}" target="_blank" rel="noreferrer">تفاصيل ↗</a>` : ""}
+    </article>
+  `).join("");
+}
+
+function filterLocal() {
+  const activeTab = document.querySelector('.local-tab.active').dataset.tab;
+  const q = localSearch.value.trim().toLowerCase();
+  const filtered = localGuideItems.filter((it) => {
+    const inCategory = activeTab === 'all' ? true : it.category === activeTab;
+    const matches = [it.title, it.description, ...it.tags].some(f => f.toLowerCase().includes(q));
+    return inCategory && matches;
+  });
+  renderLocalCards(filtered);
+}
+
+// attach local tabs
+localTabs.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    localTabs.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterLocal();
+  });
+});
+
+if (localSearch) localSearch.addEventListener('input', filterLocal);
+
+// initialize local guide view
+renderLocalCards(localGuideItems.filter(i => i.category === 'materials'));
 const shareLinkBtn = document.getElementById("shareLinkBtn");
 const toastMessage = document.getElementById("toastMessage");
 
