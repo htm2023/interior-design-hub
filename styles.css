@@ -49,6 +49,9 @@ a {
   font-size: 1.2rem;
   font-weight: 700;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .logo span {
@@ -56,6 +59,25 @@ a {
   font-size: 0.85rem;
   color: #d9c6a4;
   margin-top: 4px;
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+  display: block;
+}
+
+.logo .logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-fallback {
+  display: none;
+  font-size: 0.95rem;
+  color: #f4e5d4;
+  font-weight: 700;
 }
 
 .nav-links {
@@ -692,6 +714,12 @@ p {
   .hero-actions {
     justify-content: center;
   }
+}
+
+@media (max-width: 480px) {
+  .logo img { height: 38px; }
+  .logo { gap: 8px; }
+  .logo span { font-size: 1rem; }
 }
 
 /* Sudan Local Guide styles */

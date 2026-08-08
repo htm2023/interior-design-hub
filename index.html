@@ -19,7 +19,11 @@
 
   <header class="navbar">
     <div class="nav-container">
-      <a href="#top" class="logo">دليل المصمم الداخلي<span>Interior Design Hub</span></a>
+      <a href="#top" class="logo">
+        <img src="./logo.png" alt="شعار جامعة أم درمان الأهلية" onerror="if(!this.dataset.tried){this.dataset.tried=1; this.src='./assets/logo.png';} else {this.style.display='none'; this.nextElementSibling.style.display='block';}" />
+        <span class="logo-text">دليل المصمم الداخلي<span>Interior Design Hub</span></span>
+        <span class="logo-fallback" aria-hidden="true" style="display:none">جامعة أم درمان الأهلية</span>
+      </a>
       <nav class="nav-links">
         <a href="#top">الرئيسية</a>
         <a href="#project-types">تصفح حسب المشروع</a>
