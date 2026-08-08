@@ -808,6 +808,13 @@ p {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.05);
+}
+
 @media (max-width: 980px) {
   .site-tool-grid { grid-template-columns: 1fr; }
   .site-map-panel { order: -1; }

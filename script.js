@@ -553,6 +553,12 @@ function renderSuggestedSites(type) {
     </div>
   `).join('');
 
+  // disable map buttons until map is ready
+  suggestedSitesEl.querySelectorAll('.btn[data-lat]').forEach(b => {
+    b.disabled = true;
+    b.classList.remove('loading');
+  });
+
   // attach map buttons
   suggestedSitesEl.querySelectorAll('.btn').forEach(btn => {
     if (btn.dataset.lat) {
@@ -607,6 +613,15 @@ function initSiteMap() {
     const map = L.map('siteMap').setView([15.6,32.53], 11);
     window.siteMap = map;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    // enable suggested-site buttons when map is ready
+    map.whenReady(() => {
+      document.querySelectorAll('.suggested-actions .btn[data-lat]').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      });
+      showToast('الخريطة جاهزة للعرض');
+    });
+
     map.on('click', function(e) {
       const lat = e.latlng.lat.toFixed(6);
       const lon = e.latlng.lng.toFixed(6);
