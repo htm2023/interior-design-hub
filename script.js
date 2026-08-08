@@ -559,9 +559,12 @@ function renderSuggestedSites(type) {
       btn.addEventListener('click', () => {
         const lat = parseFloat(btn.dataset.lat);
         const lon = parseFloat(btn.dataset.lon);
-        if (window.siteMap) {
+        if (window.siteMap && typeof window.siteMap.setView === 'function') {
           window.siteMap.setView([lat, lon], 15);
           L.marker([lat,lon]).addTo(window.siteMap).bindPopup(`${lat.toFixed(5)}, ${lon.toFixed(5)}`).openPopup();
+        } else {
+          console.warn('siteMap not ready when clicking suggested site', { lat, lon });
+          showToast('الخريطة لم تُحمَّل بعد. انتظر قليلاً أو أعد تحميل الصفحة.');
         }
       });
     }
