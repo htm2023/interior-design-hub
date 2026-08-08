@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2Yk9g6kGZ0p2b9x0KQYfQb0gHcVYw5qk9Q+0h0M=" crossorigin="" />
+  <link rel="stylesheet" href="leaflet.css" />
 </head>
 <body>
   <header class="identity-banner">
@@ -107,7 +107,15 @@
           <div id="siteMap" class="map-container"></div>
           <div id="mapLoadingStatus" class="map-loading">جارٍ تحميل الخريطة...</div>
           <div class="map-actions">
+            <div class="coordinate-row">
+              <label for="manualLat">خط العرض</label>
+              <input id="manualLat" type="text" placeholder="15.60" />
+              <label for="manualLon">خط الطول</label>
+              <input id="manualLon" type="text" placeholder="32.53" />
+              <button id="goToCoordsBtn" type="button" class="btn btn-primary">اذهب إلى الإحداثيات</button>
+            </div>
             <a id="openOsmLink" href="https://www.openstreetmap.org/#map=11/15.600/32.530" target="_blank" rel="noreferrer" class="btn btn-secondary">افتح OpenStreetMap</a>
+            <a id="leafletCheckLink" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" target="_blank" rel="noreferrer" class="btn btn-secondary">تحقق من Leaflet.js</a>
           </div>
         </div>
       </div>
@@ -278,8 +286,8 @@
     </div>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVY0+7r5b4kYvFihG6w6Qm2V8sKkP1z9s+9X+0R0K6w=" crossorigin=""></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/jQ6m0G0Kq3dT0jH7q7Z4zVv+3zVwYIu2pZqR8q9p2QO2e3xM6yN1m2Qf9K6rHqz1+2X/5d5nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js" defer></script>
 </body>
 </html>

@@ -487,6 +487,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearBtn = document.getElementById('clearSavedBtn');
   if (refreshBtn) refreshBtn.addEventListener('click', renderSavedMatrices);
   if (clearBtn) clearBtn.addEventListener('click', () => { clearSavedMatrices(); renderSavedMatrices(); });
+
+  const manualLatInput = document.getElementById('manualLat');
+  const manualLonInput = document.getElementById('manualLon');
+  const goToCoordsBtn = document.getElementById('goToCoordsBtn');
+
+  if (goToCoordsBtn) {
+    goToCoordsBtn.addEventListener('click', async () => {
+      const lat = parseFloat(manualLatInput?.value);
+      const lon = parseFloat(manualLonInput?.value);
+      if (Number.isNaN(lat) || Number.isNaN(lon)) {
+        return showToast('أدخل الإحداثيات بشكل صحيح. مثال: 15.60 و 32.53');
+      }
+      if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        return showToast('الإحداثيات خارج النطاق المسموح به. تحقق من القيم.');
+      }
+      goToCoordsBtn.classList.add('loading');
+      try {
+        await waitForMapReady(5000);
+        window.siteMap.setView([lat, lon], 15);
+        if (window.manualCoordMarker) {
+          window.siteMap.removeLayer(window.manualCoordMarker);
+        }
+        window.manualCoordMarker = L.marker([lat, lon]).addTo(window.siteMap);
+        window.manualCoordMarker.bindPopup(`الموقع من الإدخال: ${lat.toFixed(6)}, ${lon.toFixed(6)}`).openPopup();
+        showToast('تم الانتقال إلى الإحداثيات المحددة.');
+      } catch (err) {
+        console.warn('خريطة غير جاهزة عند إدخال الإحداثيات', err);
+        showToast('الخريطة لم تُحمَّل بعد. انتظر قليلاً أو أعد تحميل الصفحة.');
+      } finally {
+        goToCoordsBtn.classList.remove('loading');
+      }
+    });
+  }
+
   // initial render
   renderSavedMatrices();
 });
@@ -608,6 +642,77 @@ computeSiteScoreBtn.addEventListener('click', () => {
 });
 
 // Leaflet map init
+function loadLeaflet(timeoutMs = 8000) {
+  return new Promise((resolve, reject) => {
+    if (window.L && typeof window.L.map === 'function') return resolve();
+
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'leaflet.css';
+      head.appendChild(link);
+    }
+
+    const sources = [
+      'leaflet.js',
+      'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+      'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js'
+    ];
+
+    let index = 0;
+    const timeoutId = setTimeout(() => {
+      reject(new Error('leaflet-load-timeout'));
+    }, timeoutMs);
+
+    const clear = () => {
+      clearTimeout(timeoutId);
+    };
+
+    const tryLoad = () => {
+      if (window.L && typeof window.L.map === 'function') {
+        clear();
+        return resolve();
+      }
+      if (index >= sources.length) {
+        clear();
+        return reject(new Error('leaflet-load-failed'));
+      }
+
+      const src = sources[index++];
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        existing.addEventListener('load', () => {
+          if (window.L && typeof window.L.map === 'function') {
+            clear();
+            resolve();
+          } else {
+            tryLoad();
+          }
+        });
+        existing.addEventListener('error', tryLoad);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = false;
+      script.onload = () => {
+        if (window.L && typeof window.L.map === 'function') {
+          clear();
+          return resolve();
+        }
+        tryLoad();
+      };
+      script.onerror = tryLoad;
+      head.appendChild(script);
+    };
+
+    tryLoad();
+  });
+}
+
 function initSiteMap() {
   const status = document.getElementById('mapLoadingStatus');
   const openOsmLink = document.getElementById('openOsmLink');
@@ -615,6 +720,10 @@ function initSiteMap() {
     if (!status) return;
     status.textContent = text;
     status.classList.toggle('error', isError);
+  }
+
+  if (status) {
+    updateStatus('جارٍ تهيئة الخريطة...');
   }
 
   try {
@@ -667,6 +776,10 @@ function initSiteMap() {
     if (openOsmLink) {
       openOsmLink.href = `https://www.openstreetmap.org/#map=11/15.62/32.53`;
     }
+    const leafletCheckLink = document.getElementById('leafletCheckLink');
+    if (leafletCheckLink) {
+      leafletCheckLink.href = 'leaflet.js';
+    }
   } catch (err) {
     console.error('Leaflet init error', err);
     updateStatus('فشل تحميل الخريطة. يمكنك فتح OpenStreetMap مباشرةً.', true);
@@ -693,9 +806,27 @@ function waitForMapReady(timeout = 5000) {
 }
 
 // initialize map after DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof L !== 'undefined') initSiteMap();
-  else console.warn('Leaflet not loaded');
+document.addEventListener('DOMContentLoaded', async () => {
+  const status = document.getElementById('mapLoadingStatus');
+  if (status) {
+    status.textContent = 'جارٍ تحميل مكتبة الخرائط...';
+    status.classList.remove('error');
+  }
+  try {
+    const loaded = await loadLeaflet(10000);
+    console.log('Leaflet local status:', loaded);
+    initSiteMap();
+  } catch (err) {
+    console.error('Leaflet load failed', err);
+    if (status) {
+      if (err.message === 'leaflet-load-timeout') {
+        status.textContent = 'انتهت مهلة تحميل مكتبة الخرائط. جرب إعادة تحميل الصفحة أو تحقق من الإنترنت.';
+      } else {
+        status.textContent = 'فشل تحميل مكتبة الخرائط. تأكد من اتصال الإنترنت وأعد تحميل الصفحة.';
+      }
+      status.classList.add('error');
+    }
+  }
 });
 const shareLinkBtn = document.getElementById("shareLinkBtn");
 const toastMessage = document.getElementById("toastMessage");
