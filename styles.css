@@ -51,40 +51,42 @@ a {
   text-decoration: none;
   display: flex;
   align-items: center;
+  gap: 14px;
+}
+
+.logo-brand {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
-.logo span {
-  display: block;
-  font-size: 0.85rem;
-  color: #d9c6a4;
-  margin-top: 4px;
-}
-
-.logo img {
+.logo-image {
   height: 50px;
   width: auto;
   display: block;
+  border-radius: 12px;
+  object-fit: contain;
+  background: rgba(255,255,255,0.08);
+  padding: 6px;
 }
 
-.logo .logo-text {
+.logo-copy {
   display: flex;
   flex-direction: column;
-  line-height: 1;
+  line-height: 1.1;
 }
 
-.logo-fallback {
-  display: none;
-  font-size: 0.95rem;
-  color: #f4e5d4;
-  font-weight: 700;
+.logo-title {
+  display: block;
+  font-size: 1rem;
+  color: #fff;
 }
 
-.logo-icon {
-  width: 48px;
-  height: 48px;
-  display: none;
-  color: #f4e5d4;
+.logo-subtitle {
+  display: block;
+  font-size: 0.84rem;
+  color: #d9c6a4;
+  margin-top: 2px;
 }
 
 .nav-links {
@@ -730,7 +732,7 @@ p {
 }
 
 /* ensure icon aligns like image */
-.logo-icon, .logo img { vertical-align: middle; }
+.logo img { vertical-align: middle; }
 
 /* Sudan Local Guide styles */
 .local-guide-section {

@@ -20,16 +20,13 @@
   <header class="navbar">
     <div class="nav-container">
       <a href="#top" class="logo">
-        <picture>
-          <source srcset="./logo.svg" type="image/svg+xml">
-          <source srcset="./logo@2x.png 2x, ./logo.png 1x" type="image/png">
-          <img src="./logo.png" alt="شعار جامعة أم درمان الأهلية" onerror="handleLogoError(this)" />
-        </picture>
-        <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M12 2L2 7v6c0 5 4 9 10 9s10-4 10-9V7l-10-5zM11 11h2v6h-2v-6zm0-4h2v2h-2V7z" />
-        </svg>
-        <span class="logo-text">دليل المصمم الداخلي<span>Interior Design Hub</span></span>
-        <span class="logo-fallback" aria-hidden="true">جامعة أم درمان الأهلية</span>
+        <div class="logo-brand">
+          <img src="./logo.png" alt="شعار جامعة أم درمان الأهلية" class="logo-image" />
+          <div class="logo-copy">
+            <span class="logo-title">جامعة أم درمان الأهلية</span>
+            <span class="logo-subtitle">كلية التصميم الداخلي</span>
+          </div>
+        </div>
       </a>
       <nav class="nav-links">
         <a href="#top">الرئيسية</a>
@@ -286,17 +283,5 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVY0+7r5b4kYvFihG6w6Qm2V8sKkP1z9s+9X+0R0K6w=" crossorigin=""></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/jQ6m0G0Kq3dT0jH7q7Z4zVv+3zVwYIu2pZqR8q9p2QO2e3xM6yN1m2Qf9K6rHqz1+2X/5d5nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="script.js" defer></script>
-    <script>
-      function handleLogoError(img) {
-        try {
-          if (!img.dataset.tried) { img.dataset.tried = '1'; img.src = './assets/logo.png'; return; }
-        } catch(e){}
-        img.style.display = 'none';
-        var root = img.closest('.logo');
-        if (!root) return;
-        var icon = root.querySelector('.logo-icon'); if (icon) icon.style.display = 'block';
-        var fallback = root.querySelector('.logo-fallback'); if (fallback) fallback.style.display = 'inline-block';
-      }
-    </script>
 </body>
 </html>
