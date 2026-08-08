@@ -556,15 +556,19 @@ function renderSuggestedSites(type) {
   // attach map buttons
   suggestedSitesEl.querySelectorAll('.btn').forEach(btn => {
     if (btn.dataset.lat) {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const lat = parseFloat(btn.dataset.lat);
         const lon = parseFloat(btn.dataset.lon);
-        if (window.siteMap && typeof window.siteMap.setView === 'function') {
+        btn.classList.add('loading');
+        try {
+          await waitForMapReady(5000);
           window.siteMap.setView([lat, lon], 15);
           L.marker([lat,lon]).addTo(window.siteMap).bindPopup(`${lat.toFixed(5)}, ${lon.toFixed(5)}`).openPopup();
-        } else {
-          console.warn('siteMap not ready when clicking suggested site', { lat, lon });
+        } catch (err) {
+          console.warn('siteMap not ready when clicking suggested site', { lat, lon, err });
           showToast('الخريطة لم تُحمَّل بعد. انتظر قليلاً أو أعد تحميل الصفحة.');
+        } finally {
+          btn.classList.remove('loading');
         }
       });
     }
@@ -616,6 +620,25 @@ function initSiteMap() {
   } catch (err) {
     console.error('Leaflet init error', err);
   }
+}
+
+function waitForMapReady(timeout = 5000) {
+  return new Promise((resolve, reject) => {
+    const interval = 150;
+    let elapsed = 0;
+    const id = setInterval(() => {
+      if (window.siteMap && typeof window.siteMap.setView === 'function') {
+        clearInterval(id);
+        resolve();
+      } else {
+        elapsed += interval;
+        if (elapsed >= timeout) {
+          clearInterval(id);
+          reject(new Error('map-ready-timeout'));
+        }
+      }
+    }, interval);
+  });
 }
 
 // initialize map after DOM ready
