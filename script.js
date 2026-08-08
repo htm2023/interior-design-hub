@@ -330,20 +330,63 @@ const siteScoreResult = document.getElementById('siteScoreResult');
 
 const suggestedSites = {
   residential: [
-    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.', link: '/local-details/site-101.html' },
-    { title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'تراثي مع فرص دمج الحوش والفراغات.', link: '/local-details/site-102.html' }
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.', link: '/detail.html?id=site-101' },
+    { title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'تراثي مع فرص دمج الحوش والفراغات.', link: '/detail.html?id=site-102' }
   ],
   commercial: [
-    { title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري واضح مع انسيابية مرور.', link: '/local-details/site-103.html' },
-    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'موقع مركزي وقابلية للتحول التجاري.', link: '/local-details/site-101.html' }
+    { title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري واضح مع انسيابية مرور.', link: '/detail.html?id=site-103' },
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'موقع مركزي وقابلية للتحول التجاري.', link: '/detail.html?id=site-101' }
   ],
   hospitality: [
-    { title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية وتجربة ضيافة سياحية.', link: '/local-details/site-104.html' }
+    { title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية وتجربة ضيافة سياحية.', link: '/detail.html?id=site-104' }
   ],
   'health-cultural': [
-    { title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.', link: '/local-details/site-105.html' }
+    { title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.', link: '/detail.html?id=site-105' }
   ]
 };
+
+// Data used by dynamic detail page
+const siteData = {
+  'site-101': {
+    title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.', notes: ['سهولة الوصول', 'توفر خدمات الصرف والمياه والكهرباء', 'مراقبة التعرض الشمسي ضرورية'], cad: 'https://cadmapper.com/?lat=15.590&lon=32.510', sun: 'https://www.suncalc.org/#/15.590,32.510'
+  },
+  'site-102': {
+    title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'موقع ذو طابع تراثي وفرص كبيرة لدمج الحوش.', notes: ['تحفظ تراثي محتمل','مطالب استشارية للترميم'], cad: 'https://cadmapper.com/?lat=15.650&lon=32.470', sun: 'https://www.suncalc.org/#/15.650,32.470'
+  },
+  'site-103': {
+    title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري حيوي، مناسب لمشروعات تتطلب رؤية وحركة.', notes: ['انسيابية مرور','توافد زوار مرتفع'], cad: 'https://cadmapper.com/?lat=15.588&lon=32.534', sun: 'https://www.suncalc.org/#/15.588,32.534'
+  },
+  'site-104': {
+    title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية مميزة، مناسب لمشاريع الضيافة.', notes: ['قرب البحر','تأثير الرياح والملوحة'], cad: 'https://cadmapper.com/?lat=19.613&lon=37.216', sun: 'https://www.suncalc.org/#/19.613,37.216'
+  },
+  'site-105': {
+    title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.', notes: ['منطقة مركزية','قرب الخدمات الثقافية'], cad: 'https://cadmapper.com/?lat=15.590&lon=32.520', sun: 'https://www.suncalc.org/#/15.590,32.520'
+  }
+};
+
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+function renderDetailById(id) {
+  const data = siteData[id];
+  const titleEl = document.getElementById('detailTitle');
+  const coordsEl = document.getElementById('detailCoords');
+  const reasonEl = document.getElementById('detailReason');
+  const notesEl = document.getElementById('detailNotes');
+  const actionsEl = document.getElementById('detailActions');
+  if (!data) {
+    if (titleEl) titleEl.textContent = 'الموقع غير معروف';
+    if (reasonEl) reasonEl.textContent = '';
+    return;
+  }
+  if (titleEl) titleEl.textContent = data.title;
+  if (coordsEl) coordsEl.textContent = `الإحداثيات: ${data.coords[0]}, ${data.coords[1]}`;
+  if (reasonEl) reasonEl.textContent = data.reason;
+  if (notesEl) notesEl.innerHTML = `<ul>${data.notes.map(n => `<li>${n}</li>`).join('')}</ul>`;
+  if (actionsEl) actionsEl.innerHTML = `<a class="btn btn-secondary" href="${data.cad}" target="_blank" rel="noreferrer">تحميل مخطط CAD عبر CadMapper ↗</a> <a class="btn btn-secondary" href="${data.sun}" target="_blank" rel="noreferrer">تحليل مسار الشمس عبر SunCalc ↗</a>`;
+}
 
 function renderSuggestedSites(type) {
   const list = suggestedSites[type] || [];
