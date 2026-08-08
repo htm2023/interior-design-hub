@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دليل المصمم الداخلي - Interior Design Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="identity-banner">
+    <div class="banner-container">
+      <p id="siteBannerText">جامعة أم درمان الأهلية - كلية التصميم الداخلي</p>
+    </div>
+  </header>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#top" class="logo">دليل المصمم الداخلي<span>Interior Design Hub</span></a>
+      <nav class="nav-links">
+        <a href="#top">الرئيسية</a>
+        <a href="#project-types">تصفح حسب المشروع</a>
+        <a href="#resources">دليل المواقع</a>
+        <a href="#interactive">المستكشف التفاعلي</a>
+      </nav>
+      <a href="#help" class="nav-cta">مساعدة في التخرج</a>
+    </div>
+  </header>
+
+  <main id="top" class="landing-page">
+    <section class="dashboard-bar">
+      <div class="dashboard-card">
+        <div class="dashboard-row">
+          <label for="universitySelect">اختيار الجامعة والكلية</label>
+          <select id="universitySelect" class="dashboard-select">
+            <option value="udhc">جامعة أم درمان الأهلية - كلية التصميم الداخلي</option>
+            <option value="uofk">جامعة الخرطوم - كلية الهندسة (قسم المعمار)</option>
+            <option value="sust">جامعة السودان للعلوم والتكنولوجيا - كلية الفنون الجملية والتطبيقية (التصميم الداخلي)</option>
+            <option value="other">جامعة أخرى...</option>
+          </select>
+        </div>
+        <div class="dashboard-row custom-university-panel" id="customUniversityPanel">
+          <label for="customUniversityInput">اكتب اسم الجامعة والكلية</label>
+          <input id="customUniversityInput" class="dashboard-input" type="text" placeholder="مثلاً: جامعة أخرى - كلية التصميم الداخلي" />
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-section">
+      <div class="hero-copy">
+        <p class="eyebrow" id="heroEyebrow">دليل شامل لخريجي وطلاب التصميم الداخلي</p>
+        <h1 id="heroTitle">دليلك الشامل لإنجاز مشروع التخرج والتصميم الداخلي</h1>
+        <p class="hero-subtitle">نوفر المخططات التنفيذية CAD، البلوكات Revit & 3D Max، والخرائط المقترحة حسب نوع مشروعك لتساعدك على البناء بثقة واحتراف.</p>
+        <div class="hero-actions">
+          <a href="#resources" class="btn btn-primary">ابحث عن مصادر</a>
+          <a href="#interactive" class="btn btn-secondary">ابدأ التوجيه</a>
+          <button id="shareLinkBtn" type="button" class="btn btn-secondary">نسخ رابط المشاركة</button>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-card">
+          <h2>ابدأ مشروعك</h2>
+          <p>من البحث إلى التنفيذ، كل مورد تحتاجه لتخرج بتصميم داخلي مميز.</p>
+          <div class="hero-stats">
+            <div>
+              <strong>120+</strong>
+              <span>مصدر متاح</span>
+            </div>
+            <div>
+              <strong>4</strong>
+              <span>فئات مشروع</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="project-types" class="project-types-section">
+      <div class="section-header">
+        <p class="section-label">اختر نوع مشروعك</p>
+        <h2>نوع المشروع يحدد الموارد المثالية</h2>
+      </div>
+      <div class="project-grid">
+        <article class="project-card">
+          <div class="project-icon">🏡</div>
+          <h3>مشاريع سكنية</h3>
+          <p>فيلا، شقق فاخرة، تصميم داخلي دافئ ومريح.</p>
+        </article>
+        <article class="project-card">
+          <div class="project-icon">🏢</div>
+          <h3>مشاريع تجارية وإدارية</h3>
+          <p>مكاتب، معارض، مقرات الشركات بترتيب وظيفي أنيق.</p>
+        </article>
+        <article class="project-card">
+          <div class="project-icon">🏨</div>
+          <h3>مشاريع الضيافة</h3>
+          <p>فنادق، مطاعم، كافيهات مع تركيز على تجربة الضيف.</p>
+        </article>
+        <article class="project-card">
+          <div class="project-icon">🏥</div>
+          <h3>مشاريع صحية وثقافية</h3>
+          <p>مستشفيات، متاحف، مراكز معارض بعناصر تخطيط مبتكرة.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="resources" class="resources-section">
+      <div class="section-header">
+        <p class="section-label">تغذية بصرية واستلهام الأفكار</p>
+        <h2>روابط مواقع التصميم العالمية مصنفة حسب نوع مشروعك</h2>
+      </div>
+      <div class="resources-toolbar">
+        <div class="filter-buttons" role="group" aria-label="تصنيف المواقع">
+          <button type="button" class="filter-btn active" data-filter="all">الكل</button>
+          <button type="button" class="filter-btn" data-filter="residential">🏠 مشاريع سكنية</button>
+          <button type="button" class="filter-btn" data-filter="commercial">🏢 مشاريع تجارية ومتاجر</button>
+          <button type="button" class="filter-btn" data-filter="hospitality">☕ ضيافة ومطاعم</button>
+          <button type="button" class="filter-btn" data-filter="workspaces">💼 مشاريع إدارية ومكاتب</button>
+          <button type="button" class="filter-btn" data-filter="public">🏛️ مشاريع ثقافية وعامة</button>
+          <button type="button" class="filter-btn" data-filter="moodboards">🎨 الفكرة ولوحات المواد</button>
+        </div>
+        <div class="resource-search">
+          <label for="resourceSearch">بحث سريع</label>
+          <input id="resourceSearch" type="search" placeholder="ابحث عن موقع، مطعم، إضاءة، Moodboard..." />
+        </div>
+      </div>
+      <div class="resources-grid" id="resourcesGrid"></div>
+    </section>
+
+    <section id="interactive" class="interactive-section">
+      <div class="section-header">
+        <p class="section-label">المستكشف التفاعلي</p>
+        <h2 id="interactiveTitle">اختر نوع المشروع واحصل على دليل مخصص</h2>
+      </div>
+      <div class="interactive-card">
+        <div class="interactive-panel">
+          <label for="projectType">اختر نوع المشروع</label>
+          <select id="projectType">
+            <option value="residential">مشاريع سكنية</option>
+            <option value="commercial">مشاريع تجارية وإدارية</option>
+            <option value="hospitality">مشاريع الضيافة</option>
+            <option value="health-cultural">مشاريع صحية وثقافية</option>
+          </select>
+        </div>
+        <div class="interactive-panel">
+          <label for="studentName">اسم الطالب</label>
+          <input id="studentName" class="dashboard-input" type="text" placeholder="اكتب اسم الطالب" />
+        </div>
+        <div class="interactive-panel">
+          <label for="projectName">اسم المشروع</label>
+          <input id="projectName" class="dashboard-input" type="text" placeholder="اكتب اسم المشروع" />
+        </div>
+        <div class="interactive-panel">
+          <label for="supervisor">اسم المشرف</label>
+          <input id="supervisor" class="dashboard-input" type="text" placeholder="اكتب اسم المشرف" />
+        </div>
+        <div class="interactive-result" id="guideResult">
+          <h3>تفاصيل مخصصة</h3>
+          <p>اختر نوع المشروع من القائمة للحصول على أبعاد قياسية، مخططات مطلوبة وروابط مقترحة.</p>
+        </div>
+        <div class="project-title-block">
+          <h3>كليشة المشروع</h3>
+          <pre id="projectTitleBlock" class="title-block">جامعة أم درمان الأهلية - كلية التصميم الداخلي
+اسم الطالب: [اسم الطالب]
+اسم المشروع: [اسم المشروع]
+المشرف: [اسم المشرف]</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toastMessage" class="toast-message" aria-live="polite"></div>
+  <footer class="footer" id="help">
+    <div class="footer-container">
+      <div>
+        <p class="footer-title">دليل المصمم الداخلي - Interior Design Hub</p>
+        <p>حقوق الطبع © 2026. جميع الحقوق محفوظة.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#top">الرئيسية</a>
+        <a href="#project-types">تصفح حسب المشروع</a>
+        <a href="#resources">دليل المواقع</a>
+        <a href="#interactive">المستكشف التفاعلي</a>
+      </div>
+      <div class="social-links">
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="LinkedIn">🔗</a>
+        <a href="#" aria-label="Instagram">📸</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
