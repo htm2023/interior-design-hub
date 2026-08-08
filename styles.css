@@ -80,6 +80,13 @@ a {
   font-weight: 700;
 }
 
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  display: none;
+  color: #f4e5d4;
+}
+
 .nav-links {
   display: flex;
   gap: 22px;
@@ -721,6 +728,9 @@ p {
   .logo { gap: 8px; }
   .logo span { font-size: 1rem; }
 }
+
+/* ensure icon aligns like image */
+.logo-icon, .logo img { vertical-align: middle; }
 
 /* Sudan Local Guide styles */
 .local-guide-section {
