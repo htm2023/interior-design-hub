@@ -209,10 +209,10 @@ const localGuideItems = [
   {
     id: 1,
     category: "materials",
-    title: "أخشاب محلية (ساج، بن",
+    title: "أخشاب محلية (ساج، بن)",
     description: "أنواع الأخشاب المتاحة محلياً واستخداماتها في النجارة والتشطيب.",
     tags: ["أخشاب", "تشطيب"],
-    link: ""
+    link: "local-details/1.html"
   },
   {
     id: 2,
@@ -220,7 +220,7 @@ const localGuideItems = [
     title: "رخام محلي واستيراد بدائل",
     description: "مصادر الرخام المحلي وأنواعه وطرق التشطيب المتبعة في السودان.",
     tags: ["رخام", "مواد"],
-    link: ""
+    link: "local-details/2.html"
   },
   {
     id: 3,
@@ -228,7 +228,7 @@ const localGuideItems = [
     title: "طوب مفرغ ومواصفاته",
     description: "مزايا الطوب المفرغ وكيفية دمجه في التصميم الداخلي والأثاث القائم على الحوائط.",
     tags: ["طوب", "بناء"],
-    link: ""
+    link: "local-details/3.html"
   },
   // Markets
   {
@@ -237,7 +237,7 @@ const localGuideItems = [
     title: "سوق السجانة",
     description: "مركز لتوريد الخامات والمواد التقليدية في الخرطوم.",
     tags: ["أسواق", "خرطوم"],
-    link: ""
+    link: "local-details/11.html"
   },
   {
     id: 12,
@@ -245,7 +245,7 @@ const localGuideItems = [
     title: "ورش النجارة والكريتال",
     description: "قائمة بورش النجارة المتخصصة وتصنيع الكريتال في المناطق الحضرية.",
     tags: ["ورش", "نجارة"],
-    link: ""
+    link: "local-details/12.html"
   },
   // Identity
   {
@@ -254,7 +254,7 @@ const localGuideItems = [
     title: "التهوية والحوش التقليدي",
     description: "نصائح لتهوية المباني ودمج الساحات الداخلية (الحوش) لتحسين المناخ الداخلي.",
     tags: ["تهوية", "مناخ"],
-    link: ""
+    link: "local-details/21.html"
   },
   {
     id: 22,
@@ -262,7 +262,7 @@ const localGuideItems = [
     title: "ألوان ترابية ومحلية",
     description: "لوحات ألوان مستلهمة من التراث السوداني والمواد المحلية.",
     tags: ["ألوان", "تراث"],
-    link: ""
+    link: "local-details/22.html"
   },
   {
     id: 23,
@@ -270,7 +270,7 @@ const localGuideItems = [
     title: "دمج التراث في الأثاث المودرن",
     description: "أمثلة على استخدام عناصر تراثية مع خطوط أثاث حديثة.",
     tags: ["تراث", "أثاث"],
-    link: ""
+    link: "local-details/23.html"
   }
 ];
 
@@ -318,6 +318,117 @@ if (localSearch) localSearch.addEventListener('input', filterLocal);
 
 // initialize local guide view
 renderLocalCards(localGuideItems.filter(i => i.category === 'materials'));
+
+/* Site Selection & Analysis Tool JS */
+const siteTabs = document.querySelectorAll('.site-tab');
+const siteSuggestionsPanel = document.getElementById('siteSuggestions');
+const siteMatrixPanel = document.getElementById('siteMatrix');
+const siteProjectTypeSelect = document.getElementById('siteProjectTypeSelect');
+const suggestedSitesEl = document.getElementById('suggestedSites');
+const computeSiteScoreBtn = document.getElementById('computeSiteScore');
+const siteScoreResult = document.getElementById('siteScoreResult');
+
+const suggestedSites = {
+  residential: [
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.' },
+    { title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'تراثي مع فرص دمج الحوش والفراغات.' }
+  ],
+  commercial: [
+    { title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري واضح مع انسيابية مرور.' },
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'موقع مركزي وقابلية للتحول التجاري.' }
+  ],
+  hospitality: [
+    { title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية وتجربة ضيافة سياحية.' }
+  ],
+  'health-cultural': [
+    { title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.' }
+  ]
+};
+
+function renderSuggestedSites(type) {
+  const list = suggestedSites[type] || [];
+  if (!list.length) {
+    suggestedSitesEl.innerHTML = '<div class="no-local-results">لا توجد مواقع مقترحة لهذه الفئة.</div>';
+    return;
+  }
+  suggestedSitesEl.innerHTML = list.map(s => `
+    <div class="suggested-card">
+      <h4>${s.title}</h4>
+      <p>${s.reason}</p>
+      <div class="suggested-actions">
+        <button class="btn btn-secondary" data-lat="${s.coords[0]}" data-lon="${s.coords[1]}">عرض على الخريطة</button>
+        <a class="btn btn-primary" href="/local-details/" target="_blank" rel="noreferrer">تفاصيل الموقع</a>
+      </div>
+    </div>
+  `).join('');
+
+  // attach map buttons
+  suggestedSitesEl.querySelectorAll('.btn').forEach(btn => {
+    if (btn.dataset.lat) {
+      btn.addEventListener('click', () => {
+        const lat = parseFloat(btn.dataset.lat);
+        const lon = parseFloat(btn.dataset.lon);
+        if (window.siteMap) {
+          window.siteMap.setView([lat, lon], 15);
+          L.marker([lat,lon]).addTo(window.siteMap).bindPopup(`${lat.toFixed(5)}, ${lon.toFixed(5)}`).openPopup();
+        }
+      });
+    }
+  });
+}
+
+// tabs
+siteTabs.forEach(tab => tab.addEventListener('click', () => {
+  siteTabs.forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const mode = tab.dataset.mode;
+  if (mode === 'suggestions') { siteSuggestionsPanel.style.display = ''; siteMatrixPanel.style.display = 'none'; }
+  else { siteSuggestionsPanel.style.display = 'none'; siteMatrixPanel.style.display = ''; }
+}));
+
+siteProjectTypeSelect.addEventListener('change', () => renderSuggestedSites(siteProjectTypeSelect.value));
+renderSuggestedSites(siteProjectTypeSelect.value);
+
+// Site matrix score
+computeSiteScoreBtn.addEventListener('click', () => {
+  const form = document.getElementById('siteMatrixForm');
+  const vals = Array.from(form.querySelectorAll('.matrix-select')).map(s => parseInt(s.value,10));
+  const total = vals.reduce((a,b) => a+b, 0);
+  const percent = Math.round((total / (vals.length*5)) * 100);
+  let advice = '';
+  if (percent >= 85) advice = 'موقع ممتاز — مناسب للمشروع مع تأثيرات قليلة.';
+  else if (percent >= 65) advice = 'مناسب مع بعض المعالجات المعمارية (تهوية/عزل/تظليل).';
+  else if (percent >= 40) advice = 'قابل للتطوير لكنه يحتاج تحسينات في الخدمات أو التكييف.';
+  else advice = 'غير مناسب دون تدخلات كبيرة أو اختيار موقع بديل.';
+  siteScoreResult.innerHTML = `<strong>نسبة الملاءمة: ${percent}%</strong><p>${advice}</p>`;
+});
+
+// Leaflet map init
+function initSiteMap() {
+  try {
+    const map = L.map('siteMap').setView([15.6,32.53], 11);
+    window.siteMap = map;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    map.on('click', function(e) {
+      const lat = e.latlng.lat.toFixed(6);
+      const lon = e.latlng.lng.toFixed(6);
+      const cadUrl = `https://cadmapper.com/?lat=${lat}&lon=${lon}`;
+      const sunUrl = `https://www.suncalc.org/#/${lat},${lon}`;
+      const popup = L.popup()
+        .setLatLng(e.latlng)
+        .setContent(`<div style="min-width:180px"><strong>إحداثيات:</strong><div>${lat}, ${lon}</div><div style="margin-top:8px"><a href="${cadUrl}" target="_blank" rel="noreferrer" class="btn btn-secondary">تحميل مخطط CAD عبر CadMapper ↗</a> <a href="${sunUrl}" target="_blank" rel="noreferrer" class="btn btn-secondary">تحليل مسار الشمس عبر SunCalc ↗</a></div></div>`)
+        .openOn(map);
+    });
+  } catch (err) {
+    console.error('Leaflet init error', err);
+  }
+}
+
+// initialize map after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof L !== 'undefined') initSiteMap();
+  else console.warn('Leaflet not loaded');
+});
 const shareLinkBtn = document.getElementById("shareLinkBtn");
 const toastMessage = document.getElementById("toastMessage");
 

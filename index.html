@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2Yk9g6kGZ0p2b9x0KQYfQb0gHcVYw5qk9Q+0h0M=" crossorigin="" />
 </head>
 <body>
   <header class="identity-banner">
@@ -44,6 +45,53 @@
         <div class="dashboard-row custom-university-panel" id="customUniversityPanel">
           <label for="customUniversityInput">اكتب اسم الجامعة والكلية</label>
           <input id="customUniversityInput" class="dashboard-input" type="text" placeholder="مثلاً: جامعة أخرى - كلية التصميم الداخلي" />
+        </div>
+      </div>
+    </section>
+    <section id="site-tool" class="site-tool-section">
+      <div class="section-header">
+        <p class="section-label">أدوات الموقع</p>
+        <h2>مُستكشف ومُحلل موقع المشروع (Site Selection & Analysis Tool)</h2>
+      </div>
+
+      <div class="site-tool-grid">
+        <div class="site-tool-panel">
+          <div class="site-tabs">
+            <button class="site-tab active" data-mode="suggestions">مواقع مقترحة حسب نوع المشروع</button>
+            <button class="site-tab" data-mode="matrix">حاسبة تقييم موقع الطالب - Site Matrix</button>
+          </div>
+
+          <div class="site-panel" id="siteSuggestions">
+            <label for="siteProjectTypeSelect">اختر نوع المشروع</label>
+            <select id="siteProjectTypeSelect">
+              <option value="residential">مشاريع سكنية</option>
+              <option value="commercial">مشاريع تجارية وإدارية</option>
+              <option value="hospitality">مشاريع الضيافة</option>
+              <option value="health-cultural">مشاريع صحية وثقافية</option>
+            </select>
+
+            <div id="suggestedSites" class="suggested-sites"></div>
+          </div>
+
+          <div class="site-panel" id="siteMatrix" style="display:none;">
+            <h3>حاسبة تقييم الموقع</h3>
+            <form id="siteMatrixForm">
+              <div class="matrix-row"><label>الوصول</label><select name="access" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+              <div class="matrix-row"><label>التوجيه والمناخ</label><select name="orientation" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+              <div class="matrix-row"><label>المساحة</label><select name="area" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+              <div class="matrix-row"><label>الخدمات</label><select name="services" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+              <div class="matrix-row"><label>الانسجام مع الجوار</label><select name="context" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
+              <div style="margin-top:12px">
+                <button type="button" id="computeSiteScore" class="btn btn-primary">احسب نسبة الملاءمة</button>
+              </div>
+            </form>
+            <div id="siteScoreResult" class="site-score-result"></div>
+          </div>
+        </div>
+
+        <div class="site-map-panel">
+          <div class="map-header"><h3>خريطة تفاعلية</h3><p>انقر على الخريطة لاختيار موقع والحصول على روابط مفيدة.</p></div>
+          <div id="siteMap" style="height:420px;border-radius:12px;overflow:hidden"></div>
         </div>
       </div>
     </section>
@@ -213,6 +261,7 @@
     </div>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVY0+7r5b4kYvFihG6w6Qm2V8sKkP1z9s+9X+0R0K6w=" crossorigin=""></script>
   <script src="script.js" defer></script>
 </body>
 </html>
