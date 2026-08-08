@@ -364,6 +364,13 @@ const siteData = {
   }
 };
 
+// add contact fields to siteData (phone/address/email/website)
+siteData['site-101'].contact = { phone: '+249-912-000101', address: 'الخرطوم - حي المقرن', email: 'info@site101.sd', website: '' };
+siteData['site-102'].contact = { phone: '+249-912-000102', address: 'أم درمان - حي العرب', email: 'info@site102.sd', website: '' };
+siteData['site-103'].contact = { phone: '+249-912-000103', address: 'شارع النيل - الخرطوم', email: 'info@site103.sd', website: '' };
+siteData['site-104'].contact = { phone: '+249-912-000104', address: 'بورتسودان - المورينق', email: 'info@site104.sd', website: '' };
+siteData['site-105'].contact = { phone: '+249-912-000105', address: 'حي المعارض - الخرطوم', email: 'info@site105.sd', website: '' };
+
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
@@ -386,6 +393,147 @@ function renderDetailById(id) {
   if (reasonEl) reasonEl.textContent = data.reason;
   if (notesEl) notesEl.innerHTML = `<ul>${data.notes.map(n => `<li>${n}</li>`).join('')}</ul>`;
   if (actionsEl) actionsEl.innerHTML = `<a class="btn btn-secondary" href="${data.cad}" target="_blank" rel="noreferrer">تحميل مخطط CAD عبر CadMapper ↗</a> <a class="btn btn-secondary" href="${data.sun}" target="_blank" rel="noreferrer">تحليل مسار الشمس عبر SunCalc ↗</a>`;
+  // render contacts
+  if (actionsEl && data.contact) {
+    const c = data.contact;
+    const contactHtml = `<div class="detail-contacts"><h4>معلومات الاتصال</h4><p>العنوان: ${c.address || '-'}<br>الهاتف: ${c.phone || '-'}<br>البريد: ${c.email || '-'}${c.website ? `<br>الموقع: <a href="${c.website}" target="_blank" rel="noreferrer">${c.website}</a>` : ''}</p></div>`;
+    actionsEl.insertAdjacentHTML('beforeend', contactHtml);
+  }
+}
+
+// Site Matrix export/save functions
+function collectSiteMatrixData() {
+  const form = document.getElementById('siteMatrixForm');
+  if (!form) return null;
+  const values = {};
+  Array.from(form.querySelectorAll('.matrix-select')).forEach((sel, i) => {
+    const name = sel.name || `col${i}`;
+    values[name] = parseInt(sel.value, 10);
+  });
+  const total = Object.values(values).reduce((a,b) => a + b, 0);
+  const percent = Math.round((total / (Object.keys(values).length * 5)) * 100);
+  let advice = '';
+  if (percent >= 85) advice = 'موقع ممتاز — مناسب للمشروع مع تأثيرات قليلة.';
+  else if (percent >= 65) advice = 'مناسب مع بعض المعالجات المعمارية (تهوية/عزل/تظليل).';
+  else if (percent >= 40) advice = 'قابل للتطوير لكنه يحتاج تحسينات في الخدمات أو التكييف.';
+  else advice = 'غير مناسب دون تدخلات كبيرة أو اختيار موقع بديل.';
+  return { values, total, percent, advice, timestamp: new Date().toISOString() };
+}
+
+function exportSiteMatrixCSV() {
+  const data = collectSiteMatrixData();
+  if (!data) return showToast('النموذج غير موجود.');
+  const headers = ['timestamp', ...Object.keys(data.values), 'total', 'percent', 'advice'];
+  const row = [data.timestamp, ...Object.values(data.values), data.total, data.percent, `"${data.advice}"`];
+  const csv = headers.join(',') + '\n' + row.join(',');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `site-matrix-${Date.now()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function exportSiteMatrixPDF() {
+  const data = collectSiteMatrixData();
+  if (!data) return showToast('النموذج غير موجود.');
+  try {
+    const { jsPDF } = window.jspdf || window.jspdf || {};
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    let y = 20;
+    doc.setFontSize(14);
+    doc.text('Site Matrix Report', 20, y);
+    y += 10;
+    doc.setFontSize(11);
+    doc.text(`Timestamp: ${data.timestamp}`, 20, y);
+    y += 8;
+    Object.entries(data.values).forEach(([k,v]) => {
+      doc.text(`${k}: ${v}`, 20, y);
+      y += 7;
+    });
+    doc.text(`Total: ${data.total}`, 20, y); y += 7;
+    doc.text(`Percent: ${data.percent}%`, 20, y); y += 7;
+    doc.text(`Advice: ${data.advice}`, 20, y);
+    doc.save(`site-matrix-${Date.now()}.pdf`);
+  } catch (err) {
+    console.error('PDF export error', err);
+    showToast('فشل إنشاء ملف PDF.');
+  }
+}
+
+function saveSiteMatrixLocal() {
+  const data = collectSiteMatrixData();
+  if (!data) return showToast('النموذج غير موجود.');
+  const key = 'savedSiteMatrices';
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  existing.push(data);
+  localStorage.setItem(key, JSON.stringify(existing));
+  showToast('تم حفظ نتيجة الـ Site Matrix محليًا.');
+}
+
+// attach export buttons
+document.addEventListener('DOMContentLoaded', () => {
+  const csvBtn = document.getElementById('exportCsvBtn');
+  const pdfBtn = document.getElementById('exportPdfBtn');
+  const saveBtn = document.getElementById('saveMatrixBtn');
+  if (csvBtn) csvBtn.addEventListener('click', exportSiteMatrixCSV);
+  if (pdfBtn) pdfBtn.addEventListener('click', exportSiteMatrixPDF);
+  if (saveBtn) saveBtn.addEventListener('click', saveSiteMatrixLocal);
+  // saved matrices UI
+  const refreshBtn = document.getElementById('refreshSavedBtn');
+  const clearBtn = document.getElementById('clearSavedBtn');
+  if (refreshBtn) refreshBtn.addEventListener('click', renderSavedMatrices);
+  if (clearBtn) clearBtn.addEventListener('click', () => { clearSavedMatrices(); renderSavedMatrices(); });
+  // initial render
+  renderSavedMatrices();
+});
+
+function loadSavedMatrices() {
+  try {
+    return JSON.parse(localStorage.getItem('savedSiteMatrices') || '[]');
+  } catch (e) {
+    console.warn('loadSavedMatrices parse error', e);
+    return [];
+  }
+}
+
+function renderSavedMatrices() {
+  const listEl = document.getElementById('savedMatricesList');
+  if (!listEl) return;
+  const items = loadSavedMatrices();
+  if (!items.length) {
+    listEl.innerHTML = '<div class="no-local-results">لا توجد نتائج محفوظة.</div>';
+    return;
+  }
+  listEl.innerHTML = items.map((it, idx) => {
+    const values = Object.entries(it.values).map(([k,v]) => `${k}: ${v}`).join(' • ');
+    return `<div class="saved-matrix-item"><div class="saved-meta"><strong>${new Date(it.timestamp).toLocaleString('ar-EG')}</strong><div class="saved-values">${values}</div></div><div class="saved-actions"><button class="btn btn-secondary" data-delete="${idx}">حذف</button></div></div>`;
+  }).join('');
+  // attach delete handlers
+  listEl.querySelectorAll('[data-delete]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.delete, 10);
+      deleteSavedMatrix(idx);
+      renderSavedMatrices();
+    });
+  });
+}
+
+function deleteSavedMatrix(index) {
+  const key = 'savedSiteMatrices';
+  const arr = loadSavedMatrices();
+  if (index < 0 || index >= arr.length) return;
+  arr.splice(index, 1);
+  localStorage.setItem(key, JSON.stringify(arr));
+  showToast('تم حذف النتيجة المحفوظة.');
+}
+
+function clearSavedMatrices() {
+  localStorage.removeItem('savedSiteMatrices');
+  showToast('تم حذف جميع النتائج المحفوظة.');
 }
 
 function renderSuggestedSites(type) {

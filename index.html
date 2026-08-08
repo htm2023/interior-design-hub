@@ -81,11 +81,22 @@
               <div class="matrix-row"><label>المساحة</label><select name="area" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
               <div class="matrix-row"><label>الخدمات</label><select name="services" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
               <div class="matrix-row"><label>الانسجام مع الجوار</label><select name="context" class="matrix-select"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
-              <div style="margin-top:12px">
-                <button type="button" id="computeSiteScore" class="btn btn-primary">احسب نسبة الملاءمة</button>
-              </div>
+                  <div style="margin-top:12px">
+                    <button type="button" id="computeSiteScore" class="btn btn-primary">احسب نسبة الملاءمة</button>
+                    <button type="button" id="exportCsvBtn" class="btn btn-secondary">حفظ CSV</button>
+                    <button type="button" id="exportPdfBtn" class="btn btn-secondary">حفظ PDF</button>
+                    <button type="button" id="saveMatrixBtn" class="btn btn-secondary">حفظ محليًا</button>
+                  </div>
             </form>
             <div id="siteScoreResult" class="site-score-result"></div>
+                  <div class="saved-matrices-section">
+                    <h4>النتائج المحفوظة</h4>
+                    <div id="savedMatricesList" class="saved-matrices-list"></div>
+                    <div style="margin-top:8px">
+                      <button type="button" id="refreshSavedBtn" class="btn btn-secondary">تحديث</button>
+                      <button type="button" id="clearSavedBtn" class="btn btn-secondary">حذف الكل</button>
+                    </div>
+                  </div>
           </div>
         </div>
 
@@ -262,6 +273,7 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVY0+7r5b4kYvFihG6w6Qm2V8sKkP1z9s+9X+0R0K6w=" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/jQ6m0G0Kq3dT0jH7q7Z4zVv+3zVwYIu2pZqR8q9p2QO2e3xM6yN1m2Qf9K6rHqz1+2X/5d5nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="script.js" defer></script>
 </body>
 </html>
