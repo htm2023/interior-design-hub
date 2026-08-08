@@ -609,17 +609,26 @@ computeSiteScoreBtn.addEventListener('click', () => {
 
 // Leaflet map init
 function initSiteMap() {
+  const status = document.getElementById('mapLoadingStatus');
+  const openOsmLink = document.getElementById('openOsmLink');
+  function updateStatus(text, isError = false) {
+    if (!status) return;
+    status.textContent = text;
+    status.classList.toggle('error', isError);
+  }
+
   try {
     const map = L.map('siteMap').setView([15.6,32.53], 11);
     window.siteMap = map;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-    // enable suggested-site buttons when map is ready
+
     map.whenReady(() => {
       document.querySelectorAll('.suggested-actions .btn[data-lat]').forEach(btn => {
         btn.disabled = false;
         btn.classList.remove('loading');
       });
       showToast('الخريطة جاهزة للعرض');
+      updateStatus('الخريطة جاهزة. انقر على الموقع للحصول على الإحداثيات والروابط.');
     });
 
     map.on('click', function(e) {
@@ -632,8 +641,13 @@ function initSiteMap() {
         .setContent(`<div style="min-width:180px"><strong>إحداثيات:</strong><div>${lat}, ${lon}</div><div style="margin-top:8px"><a href="${cadUrl}" target="_blank" rel="noreferrer" class="btn btn-secondary">تحميل مخطط CAD عبر CadMapper ↗</a> <a href="${sunUrl}" target="_blank" rel="noreferrer" class="btn btn-secondary">تحليل مسار الشمس عبر SunCalc ↗</a></div></div>`)
         .openOn(map);
     });
+
+    if (openOsmLink) {
+      openOsmLink.href = `https://www.openstreetmap.org/#map=11/15.600/32.530`;
+    }
   } catch (err) {
     console.error('Leaflet init error', err);
+    updateStatus('فشل تحميل الخريطة. يمكنك فتح OpenStreetMap مباشرةً.', true);
   }
 }
 

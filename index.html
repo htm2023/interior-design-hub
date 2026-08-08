@@ -104,7 +104,11 @@
 
         <div class="site-map-panel">
           <div class="map-header"><h3>خريطة تفاعلية</h3><p>انقر على الخريطة لاختيار موقع والحصول على روابط مفيدة.</p></div>
-          <div id="siteMap" style="height:420px;border-radius:12px;overflow:hidden"></div>
+          <div id="siteMap" class="map-container"></div>
+          <div id="mapLoadingStatus" class="map-loading">جارٍ تحميل الخريطة...</div>
+          <div class="map-actions">
+            <a id="openOsmLink" href="https://www.openstreetmap.org/#map=11/15.600/32.530" target="_blank" rel="noreferrer" class="btn btn-secondary">افتح OpenStreetMap</a>
+          </div>
         </div>
       </div>
     </section>
