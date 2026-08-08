@@ -330,18 +330,18 @@ const siteScoreResult = document.getElementById('siteScoreResult');
 
 const suggestedSites = {
   residential: [
-    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.' },
-    { title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'تراثي مع فرص دمج الحوش والفراغات.' }
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'شبكة خدمات جيدة ومجتمعات سكنية قريبة.', link: '/local-details/site-101.html' },
+    { title: 'أم درمان - حي العرب', coords: [15.650,32.470], reason: 'تراثي مع فرص دمج الحوش والفراغات.', link: '/local-details/site-102.html' }
   ],
   commercial: [
-    { title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري واضح مع انسيابية مرور.' },
-    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'موقع مركزي وقابلية للتحول التجاري.' }
+    { title: 'شارع النيل', coords: [15.588,32.534], reason: 'محور تجاري واضح مع انسيابية مرور.', link: '/local-details/site-103.html' },
+    { title: 'الخرطوم المقرن', coords: [15.590,32.510], reason: 'موقع مركزي وقابلية للتحول التجاري.', link: '/local-details/site-101.html' }
   ],
   hospitality: [
-    { title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية وتجربة ضيافة سياحية.' }
+    { title: 'بورتسودان - المورينق', coords: [19.613,37.216], reason: 'واجهة بحرية وتجربة ضيافة سياحية.', link: '/local-details/site-104.html' }
   ],
   'health-cultural': [
-    { title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.' }
+    { title: 'حي المعارض (الخرطوم)', coords: [15.590,32.520], reason: 'قرب من البنية التحتية الثقافية والصحية.', link: '/local-details/site-105.html' }
   ]
 };
 
@@ -357,7 +357,7 @@ function renderSuggestedSites(type) {
       <p>${s.reason}</p>
       <div class="suggested-actions">
         <button class="btn btn-secondary" data-lat="${s.coords[0]}" data-lon="${s.coords[1]}">عرض على الخريطة</button>
-        <a class="btn btn-primary" href="/local-details/" target="_blank" rel="noreferrer">تفاصيل الموقع</a>
+        <a class="btn btn-primary" href="${s.link || '/local-details/'}" target="_blank" rel="noreferrer">تفاصيل الموقع</a>
       </div>
     </div>
   `).join('');
