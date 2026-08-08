@@ -618,9 +618,31 @@ function initSiteMap() {
   }
 
   try {
-    const map = L.map('siteMap').setView([15.6,32.53], 11);
+    const map = L.map('siteMap').setView([15.62,32.53], 11);
     window.siteMap = map;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    const trianglePoints = [
+      [15.5007, 32.5599], // الخرطوم
+      [15.6570, 32.4700], // أم درمان
+      [15.6540, 32.5500]  // بحري
+    ];
+    const triangle = L.polygon(trianglePoints, {
+      color: '#b07c2f',
+      fillColor: '#d8a25d',
+      fillOpacity: 0.18,
+      weight: 3,
+      dashArray: '8,6'
+    }).addTo(map);
+    triangle.bindPopup('<strong>العاصمة المثلثة</strong><br>الخرطوم - أم درمان - بحري');
+
+    const markerLabels = ['الخرطوم', 'أم درمان', 'بحري'];
+    trianglePoints.forEach((coords, index) => {
+      const marker = L.marker(coords).addTo(map);
+      marker.bindPopup(`<strong>${markerLabels[index]}</strong>`);
+    });
+
+    map.fitBounds(triangle.getBounds(), { padding: [40, 40] });
 
     map.whenReady(() => {
       document.querySelectorAll('.suggested-actions .btn[data-lat]').forEach(btn => {
@@ -643,7 +665,7 @@ function initSiteMap() {
     });
 
     if (openOsmLink) {
-      openOsmLink.href = `https://www.openstreetmap.org/#map=11/15.600/32.530`;
+      openOsmLink.href = `https://www.openstreetmap.org/#map=11/15.62/32.53`;
     }
   } catch (err) {
     console.error('Leaflet init error', err);
